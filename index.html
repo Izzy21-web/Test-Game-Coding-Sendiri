@@ -1,0 +1,83 @@
+<!text/html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGENT DUTY - Play on Web</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            color: #fff;
+        }
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            image-rendering: pixelated;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        #status {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #ffca28;
+            font-size: 14px;
+            z-index: 10;
+        }
+    </style>
+    <!-- Pygbag CDN Loader -->
+    <script src="https://pygame-web.github.io/pygbag/v0.8.0/pygbag.js"></script>
+</head>
+<body>
+    <div id="status">Memuat Python WASM & Game...</div>
+    <div id="canvas-container">
+        <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    </div>
+
+    <script>
+        window.addEventListener('load', async () => {
+            const status = document.getElementById('status');
+            
+            // Konfigurasi Pygbag untuk memuat file Python tanpa perubahan kode
+            window.App = {
+                archive: null,
+                filename: "AGENT-DUTY2-AMMO-REVISED.py",
+                arguments: []
+            };
+
+            try {
+                // Inisialisasi runtime Pygbag / Pyodide
+                await pygbag.init({
+                    canvas: document.getElementById('canvas'),
+                    onStatus: (text) => {
+                        status.innerText = text;
+                        if (text.includes("Running") || text.includes("Ready")) {
+                            setTimeout(() => status.style.display = 'none', 3000);
+                        }
+                    }
+                });
+                
+                // Jalankan game secara otomatis
+                await pygbag.run("AGENT-DUTY2-AMMO-REVISED.py");
+            } catch (err) {
+                console.error(err);
+                status.innerText = "Gagal memuat game: " + err.message;
+            }
+        });
+    </script>
+</body>
+</html>
