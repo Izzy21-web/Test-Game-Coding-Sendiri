@@ -1,0 +1,4 @@
+web/build/
+__pycache__/
+*.pyc
+agent_duty_settings.json
